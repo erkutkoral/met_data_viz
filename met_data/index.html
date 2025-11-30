@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Artist Nationality over Time (Met Museum)</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+    }
+    .tooltip {
+      position: absolute;
+      pointer-events: none;
+      background: white;
+      border: 1px solid #ccc;
+      padding: 6px 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Artist Nationality over Time (by Century)</h1>
+  <p>Heatmap of number of objects in the Met collection per artist nationality and century.</p>
+
+  <!-- Container for the heatmap -->
+  <div id="heatmap"></div>
+
+  <!-- Tooltip -->
+  <div id="tooltip" class="tooltip"></div>
+
+  <!-- D3 -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <!-- Your script -->
+  <script src="js/script.js"></script>
+</body>
+</html>
