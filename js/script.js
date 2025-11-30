@@ -1,11 +1,7 @@
-// js/script.js
-
-// Dimensions and margins
 const margin = { top: 80, right: 40, bottom: 80, left: 150 };
 const width  = 900 - margin.left - margin.right;
 const height = 600 - margin.top - margin.bottom;
 
-// Create SVG
 const svg = d3.select("#heatmap")
   .append("svg")
   .attr("width",  width  + margin.left + margin.right)
@@ -13,10 +9,8 @@ const svg = d3.select("#heatmap")
   .append("g")
   .attr("transform", `translate(${margin.left},${margin.top})`);
 
-// Tooltip
 const tooltip = d3.select("#tooltip");
 
-// Load your preprocessed CSV
 d3.csv("data/heatmap_data.csv", d => {
   return {
     nationality: d.Artist_Nationality,
@@ -25,9 +19,7 @@ d3.csv("data/heatmap_data.csv", d => {
     percent: +d.percent
   };
 }).then(data => {
-  // Get unique domains
   const centuries = Array.from(new Set(data.map(d => d.century))).sort((a, b) => {
-    // sort by numeric century extracted from label "10th c."
     const ca = parseInt(a);
     const cb = parseInt(b);
     return ca - cb;
@@ -35,7 +27,6 @@ d3.csv("data/heatmap_data.csv", d => {
 
   const nationalities = Array.from(new Set(data.map(d => d.nationality)));
 
-  // Scales
   const x = d3.scaleBand()
     .domain(centuries)
     .range([0, width])
@@ -46,13 +37,11 @@ d3.csv("data/heatmap_data.csv", d => {
     .range([0, height])
     .padding(0.05);
 
-  // Color scale (for counts)
   const maxCount = d3.max(data, d => d.count);
   const color = d3.scaleSequential()
     .domain([0, maxCount])
     .interpolator(d3.interpolateViridis);
 
-  // Axes
   const xAxis = d3.axisBottom(x);
   const yAxis = d3.axisLeft(y);
 
@@ -66,15 +55,13 @@ d3.csv("data/heatmap_data.csv", d => {
   svg.append("g")
     .call(yAxis);
 
-  // Title
   svg.append("text")
     .attr("x", width / 2)
     .attr("y", -40)
     .attr("text-anchor", "middle")
     .style("font-size", "18px")
     .text("Artist Nationality over Time (by Century)");
-
-  // X label
+  
   svg.append("text")
     .attr("x", width / 2)
     .attr("y", height + 60)
@@ -82,7 +69,6 @@ d3.csv("data/heatmap_data.csv", d => {
     .style("font-size", "14px")
     .text("Century");
 
-  // Y label
   svg.append("text")
     .attr("transform", "rotate(-90)")
     .attr("x", -height / 2)
@@ -91,7 +77,6 @@ d3.csv("data/heatmap_data.csv", d => {
     .style("font-size", "14px")
     .text("Artist Nationality");
 
-  // Draw rectangles (cells)
   svg.selectAll("rect")
     .data(data, d => d.nationality + "-" + d.century)
     .join("rect")
@@ -107,7 +92,6 @@ d3.csv("data/heatmap_data.csv", d => {
     .duration(800)
     .style("opacity", 1);
 
-  // Add percentage text labels (like seaborn annot)
   svg.selectAll("text.cell-label")
     .data(data, d => d.nationality + "-" + d.century)
     .join("text")
@@ -119,7 +103,6 @@ d3.csv("data/heatmap_data.csv", d => {
     .style("fill", "white")
     .text(d => `${d.percent.toFixed(1)}%`);
 
-  // Interaction: hover tooltip
   svg.selectAll("rect")
     .on("mouseover", function(event, d) {
       d3.select(this)
@@ -150,7 +133,6 @@ d3.csv("data/heatmap_data.csv", d => {
       tooltip.style("opacity", 0);
     });
 
-  // Optional: simple color legend (basic)
   const legendWidth = 200;
   const legendHeight = 12;
 
@@ -165,7 +147,6 @@ d3.csv("data/heatmap_data.csv", d => {
     .ticks(5)
     .tickSize(legendHeight);
 
-  // Create gradient for legend
   const defs = svg.append("defs");
   const linearGradient = defs.append("linearGradient")
     .attr("id", "legend-gradient");
@@ -202,3 +183,4 @@ d3.csv("data/heatmap_data.csv", d => {
     .style("font-size", "10px")
     .text("Number of Objects");
 });
+
